@@ -1,5 +1,6 @@
 import telebot
 import webbrowser
+from telebot import types
 from key import TOKEN
 
 bot = telebot.TeleBot(TOKEN)
@@ -28,6 +29,20 @@ def info(message):
             message.chat.id, f"Hello, {message.from_user.first_name} {message.from_user.last_name}")
     elif message.text.lower() == 'id':
         bot.reply_to(message, f"ID: {message.from_user.id}")
+
+
+# Reply to a photo document
+
+@bot.message_handler(content_types=['photo'])
+def get_photo(message):
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton(
+        "Go to a website", url="https://google.com"))
+    markup.add(types.InlineKeyboardButton(
+        "Delete a photo", callback_data='delete'))
+    markup.add(types.InlineKeyboardButton(
+        "Change a text", callback_data='edit'))
+    bot.reply_to(message, 'Thank you for a photo', reply_markup=markup)
 
 
 bot.polling(none_stop=True)
